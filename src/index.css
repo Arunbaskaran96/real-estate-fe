@@ -68,8 +68,10 @@ button:focus-visible {
 } */
 
 *{
-  background-color: rgb(240, 234, 234);
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
+}
+body{
+  background-color: rgb(240, 234, 234);
 }

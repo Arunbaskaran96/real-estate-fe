@@ -4,16 +4,21 @@ import Input from "../../components/ui/input/Input";
 import Button from "../../components/ui/button/Button";
 import { Link, useNavigate } from "react-router-dom";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginFailure,
+  loginStart,
+  loginSuccess,
+} from "../../redux/user/userSlice";
 
 export default function Signin() {
   const [formData, setFormData] = useState();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const { setItem } = useLocalStorage("token");
+  const { setItem } = useLocalStorage("auth");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.userSlice);
 
   const handleChange = (e) => {
-    setError(null);
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
@@ -22,7 +27,7 @@ export default function Signin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch(loginStart());
     try {
       const res = await fetch("/api/signin", {
         method: "POST",
@@ -33,15 +38,14 @@ export default function Signin() {
       });
       const data = await res.json();
       if (data.success === false) {
-        setError(data.message);
+        dispatch(loginFailure(data.message));
       } else {
-        setItem(data.token);
-        navigate("/home");
+        setItem(data);
+        dispatch(loginSuccess(data));
+        navigate("/layout/home");
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
   return (
