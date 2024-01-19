@@ -3,6 +3,7 @@ import classes from "./signup.module.css";
 import Input from "../../components/ui/input/Input";
 import Button from "../../components/ui/button/Button";
 import { Link, useNavigate } from "react-router-dom";
+import Oauth from "../../components/Oauth/Oauth";
 
 export default function Signup() {
   const [formData, setFormData] = useState({});
@@ -67,8 +68,10 @@ export default function Signup() {
             value={loading ? "loading.." : "Signup"}
             variant="primary"
           />
-          <Button value="Connect with Google" variant="secondary" />
         </form>
+        <div style={{ padding: "0px 20px" }}>
+          <Oauth />
+        </div>
         <div style={{ textAlign: "center" }}>
           <p>
             Already have an acount?{" "}

@@ -10,6 +10,7 @@ import {
   loginStart,
   loginSuccess,
 } from "../../redux/user/userSlice";
+import Oauth from "../../components/Oauth/Oauth";
 
 export default function Signin() {
   const [formData, setFormData] = useState();
@@ -70,8 +71,10 @@ export default function Signin() {
             value={loading ? "loading..." : "Signin"}
             variant="primary"
           />
-          <Button value="Connect with Google" variant="secondary" />
         </form>
+        <div className={classes.googlebtn}>
+          <Oauth />
+        </div>
         <div style={{ textAlign: "center" }}>
           <p>
             Dont have an account?{" "}

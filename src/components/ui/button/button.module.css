@@ -7,6 +7,8 @@
     cursor: pointer;
     margin-bottom: 15px;
     transition: 500ms;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .container{
@@ -28,6 +30,28 @@
     background-color: brown;
     &:hover{
         background-color: rgb(119, 6, 6);
+    }
+    &:disabled{
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+}
+
+.update{
+    background-color:rgb(59, 117, 245);
+    &:hover{
+        background-color: rgb(1, 36, 110);
+    }
+    &:disabled{
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+}
+
+.listing{
+    background-color: rgb(13, 56, 13);
+    &:hover{
+        background-color: rgb(4, 92, 4);
     }
     &:disabled{
         opacity: 0.3;

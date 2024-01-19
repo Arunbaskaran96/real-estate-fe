@@ -30,6 +30,6 @@
     text-decoration: none;
 }
 
-.form{
+.form,.googleBtn{
     padding: 0px 20px;
 }

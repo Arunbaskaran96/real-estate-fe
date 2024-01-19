@@ -1,0 +1,13 @@
+.common{
+    border-radius: 50%;
+    object-fit: fill;
+}
+.sm{
+    height: 33px;
+    width: 33px;
+}
+
+.def{
+    height: 100px;
+    width: 100px;
+}

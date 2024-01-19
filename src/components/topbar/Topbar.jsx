@@ -1,7 +1,11 @@
+import { useSelector } from "react-redux";
 import classes from "./topbar.module.css";
 import { IoMdSearch } from "react-icons/io";
+import Avatar from "../ui/Avatar/Avatar";
+import { Link } from "react-router-dom";
 
 export default function Topbar() {
+  const user = useSelector((state) => state.userSlice.user);
   return (
     <div className={classes.container}>
       <p className={classes.name}>Estate</p>
@@ -12,6 +16,9 @@ export default function Topbar() {
       <div className={classes.section}>
         <div>Home</div>
         <div>About</div>
+        <Link to="/layout/profile">
+          <Avatar size="sm" src={user.photo} />
+        </Link>
       </div>
     </div>
   );

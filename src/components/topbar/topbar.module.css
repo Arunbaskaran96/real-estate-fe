@@ -10,7 +10,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 120px;
+    width: 180px;
     color: white;
     font-size: 18px;
     cursor: pointer;
@@ -20,6 +20,8 @@
     width: 180px;
     border: none;
     outline: none;
+    display: flex;
+    flex-wrap: wrap;
     &::placeholder{
         padding-left: 10px;
     }
@@ -30,6 +32,8 @@
     align-items: center;
     background-color: white;
     border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .name{
@@ -38,8 +42,13 @@
     cursor: pointer;
 }
 
+
+
 @media only screen and (max-width: 600px) {
     .section{
         display: none;
+    }
+    Avatar{
+        display: inline;
     }
   }
