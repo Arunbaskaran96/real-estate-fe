@@ -1,0 +1,35 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    justify-content: center;
+    height: 90vh;
+    margin: auto;
+}
+.bottom{
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.bottom span{
+    color: red;
+    cursor: pointer;
+}
+.header{
+    text-align: center;
+}
+
+.header{
+    font-size: 40px;
+    margin-bottom: 50px;
+}
+
+.bottomBtn {
+    color: red;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.form{
+    padding: 0px 20px;
+}
