@@ -17,6 +17,10 @@ import {
   updateStart,
   updateUserError,
   updateUser,
+  deleteStart,
+  deleteUserError,
+  deleteUser,
+  signoutuser,
 } from "../../redux/user/userSlice";
 
 export default function Profile() {
@@ -96,7 +100,28 @@ export default function Profile() {
 
   const signoutHandler = () => {
     removeItem();
-    navigate("/");
+    dispatch(signoutuser());
+  };
+
+  const deleteHandler = async () => {
+    try {
+      dispatch(deleteStart());
+      const result = await fetch(`/api/deleteuser/${user._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+      const data = await result.json();
+      if (data.success === false) {
+        dispatch(deleteUserError(data));
+      } else {
+        dispatch(deleteUser());
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -152,7 +177,7 @@ export default function Profile() {
       </form>
       <Button variant="listing" value="Create listing" />
       <div className={classes.actions}>
-        <p>Delete Account</p>
+        <p onClick={deleteHandler}>Delete Account</p>
         <p onClick={signoutHandler}>Sign out</p>
       </div>
       <div style={{ fontSize: "18px", color: "green", cursor: "pointer" }}>

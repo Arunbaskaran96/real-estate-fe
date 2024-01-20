@@ -9,7 +9,7 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 export default function Oauth() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { setItem } = useLocalStorage("auth");
+  const { setItem } = useLocalStorage("token");
   const handleClick = async () => {
     try {
       const provider = new GoogleAuthProvider();
@@ -30,7 +30,7 @@ export default function Oauth() {
         const res = await data.json();
         if (res.success !== false) {
           dispatch(loginSuccess(res));
-          setItem(res);
+          setItem(res.token);
           navigate("/layout/home");
         }
       } else {
