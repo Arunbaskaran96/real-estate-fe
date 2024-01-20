@@ -33,6 +33,8 @@ export default function Signup() {
       const data = await res.json();
       if (data.success === false) {
         setError(data.message);
+      } else {
+        navigate("/");
       }
     } catch (error) {
       console.log(error);

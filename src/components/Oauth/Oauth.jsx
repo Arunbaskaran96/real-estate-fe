@@ -10,7 +10,6 @@ export default function Oauth() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { setItem } = useLocalStorage("auth");
-  const user = useSelector((state) => console.log(state));
   const handleClick = async () => {
     try {
       const provider = new GoogleAuthProvider();

@@ -14,7 +14,7 @@ import Oauth from "../../components/Oauth/Oauth";
 
 export default function Signin() {
   const [formData, setFormData] = useState();
-  const { setItem } = useLocalStorage("auth");
+  const { setItem } = useLocalStorage("token");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.userSlice);
@@ -41,7 +41,7 @@ export default function Signin() {
       if (data.success === false) {
         dispatch(loginFailure(data.message));
       } else {
-        setItem(data);
+        setItem(data.token);
         dispatch(loginSuccess(data));
         navigate("/layout/home");
       }

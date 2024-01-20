@@ -14,7 +14,9 @@ export default function Topbar() {
         <IoMdSearch fontSize="25px" />
       </div>
       <div className={classes.section}>
-        <div>Home</div>
+        <Link className={classes.home} to="/layout/home">
+          Home
+        </Link>
         <div>About</div>
         <Link to="/layout/profile">
           <Avatar size="sm" src={user.photo} />

@@ -2,7 +2,7 @@ import classes from "./profile.module.css";
 import Input from "../../components/ui/input/Input";
 import Avatar from "../../components/ui/Avatar/Avatar";
 import Button from "../../components/ui/button/Button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import {
   getDownloadURL,
@@ -11,6 +11,13 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../../firebase";
+import { useNavigate } from "react-router-dom";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import {
+  updateStart,
+  updateUserError,
+  updateUser,
+} from "../../redux/user/userSlice";
 
 export default function Profile() {
   const user = useSelector((state) => state.userSlice.user);
@@ -19,6 +26,11 @@ export default function Profile() {
   const [image, setImage] = useState(undefined);
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
+  const navigate = useNavigate();
+  const { removeItem, getItem } = useLocalStorage("token");
+  const token = getItem();
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.userSlice);
 
   useEffect(() => {
     if (image) {
@@ -43,7 +55,6 @@ export default function Profile() {
       },
       () => {
         getDownloadURL(upload.snapshot.ref).then((downloadURL) => {
-          console.log(downloadURL);
           setFormData({ ...formData, photo: downloadURL });
         });
       }
@@ -58,11 +69,34 @@ export default function Profile() {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  console.log(formData);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    dispatch(updateStart());
+    try {
+      const res = await fetch(`/api/edituser/${user._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+
+      if (data.success === false) {
+        dispatch(updateUserError(data));
+      } else {
+        dispatch(updateUser(data));
+        navigate("/layout/home");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const signoutHandler = () => {
+    removeItem();
+    navigate("/");
   };
 
   return (
@@ -94,12 +128,14 @@ export default function Profile() {
           id="username"
           placeholder="Enter your username here"
           type="text"
+          defaultValue={user.username}
           onChange={inputHandleChange}
         />
         <Input
           id="email"
           placeholder="Enter your email here"
           type="email"
+          defaultValue={user.email}
           onChange={inputHandleChange}
         />
         <Input
@@ -108,16 +144,20 @@ export default function Profile() {
           type="password"
           onChange={inputHandleChange}
         />
-        <Button variant="update" value="update" />
-        <Button variant="listing" value="Create listing" />
-        <div className={classes.actions}>
-          <p>Delete Account</p>
-          <p>Sign out</p>
-        </div>
-        <div style={{ fontSize: "18px", color: "green", cursor: "pointer" }}>
-          Show listings
-        </div>
+        <Button
+          disabled={loading}
+          variant={loading ? "loading..." : "update"}
+          value="update"
+        />
       </form>
+      <Button variant="listing" value="Create listing" />
+      <div className={classes.actions}>
+        <p>Delete Account</p>
+        <p onClick={signoutHandler}>Sign out</p>
+      </div>
+      <div style={{ fontSize: "18px", color: "green", cursor: "pointer" }}>
+        Show listings
+      </div>
     </div>
   );
 }
