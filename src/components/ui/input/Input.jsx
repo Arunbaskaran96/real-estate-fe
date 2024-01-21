@@ -7,6 +7,8 @@ export default function Input({
   onChange,
   id,
   defaultValue,
+  value,
+  required,
 }) {
   return (
     <div className={classes.container}>
@@ -17,6 +19,8 @@ export default function Input({
         className={classes.input}
         placeholder={placeholder}
         defaultValue={defaultValue}
+        value={value}
+        required={required}
       />
     </div>
   );

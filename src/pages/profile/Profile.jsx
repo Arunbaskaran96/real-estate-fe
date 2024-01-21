@@ -11,7 +11,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../../firebase";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import {
   updateStart,
@@ -35,6 +35,8 @@ export default function Profile() {
   const token = getItem();
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.userSlice);
+  const [listings, setListings] = useState([]);
+  const [deleteError, setDeleteError] = useState(null);
 
   useEffect(() => {
     if (image) {
@@ -45,6 +47,7 @@ export default function Profile() {
   const handleFileUpload = (image) => {
     const storage = getStorage(app);
     const fileName = image.name + new Date().getMinutes();
+    const [listings, setListings] = useState([]);
     const storageRef = ref(storage, fileName);
     const upload = uploadBytesResumable(storageRef, image);
     upload.on(
@@ -124,6 +127,44 @@ export default function Profile() {
     }
   };
 
+  const showListingHandler = async () => {
+    try {
+      const result = await fetch(`/api/getlistings/${user._id}`, {
+        method: "GET",
+        headers: {
+          Authorization: token,
+        },
+      });
+      const data = await result.json();
+      if (data.success === false) {
+        console.log(data.message);
+      } else {
+        setListings(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteListingHandler = async (id) => {
+    try {
+      const data = await fetch(`/api/deletelisting/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: token,
+        },
+      });
+      const result = await data.json();
+      if (result.success === false) {
+        setDeleteError(result.message);
+      } else {
+        setListings(listings.filter((item) => item._id !== id));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className={classes.container}>
       <form onSubmit={handleSubmit}>
@@ -175,14 +216,71 @@ export default function Profile() {
           value="update"
         />
       </form>
-      <Button variant="listing" value="Create listing" />
+      <Link style={{ textDecoration: "none" }} to="/layout/create-listing">
+        <Button variant="listing" value="Create listing" />
+      </Link>
       <div className={classes.actions}>
         <p onClick={deleteHandler}>Delete Account</p>
         <p onClick={signoutHandler}>Sign out</p>
       </div>
-      <div style={{ fontSize: "18px", color: "green", cursor: "pointer" }}>
+      <p
+        onClick={showListingHandler}
+        style={{
+          fontSize: "18px",
+          color: "green",
+          cursor: "pointer",
+          textDecoration: "none",
+          marginBottom: "20px",
+        }}
+        className={classes.showlisting}
+      >
         Show listings
-      </div>
+      </p>
+
+      {listings.length > 0 &&
+        listings.map((item) => {
+          return (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                margin: "10px 0px",
+              }}
+            >
+              <img
+                className={classes.listingImg}
+                src={item.imageUrls[0]}
+                alt="roompic"
+              />
+              <p>{item.name}</p>
+              <div
+                style={{
+                  display: "flex",
+                  width: "80px",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Link
+                  to={`/layout/update-listing/${item._id}`}
+                  style={{
+                    cursor: "pointer",
+                    color: "blueviolet",
+                    textDecoration: "none",
+                  }}
+                >
+                  Edit
+                </Link>
+                <div
+                  onClick={() => deleteListingHandler(item._id)}
+                  style={{ cursor: "pointer", color: "red" }}
+                >
+                  Delete
+                </div>
+              </div>
+            </div>
+          );
+        })}
     </div>
   );
 }

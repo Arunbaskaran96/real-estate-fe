@@ -1,0 +1,158 @@
+.textarea{
+    width: 100%;
+    height: 80px;
+    color: black;
+    font-size: 14px;
+    border: none;
+    margin-bottom: 15px;
+    font-weight: 500;
+    border-radius: 5px;
+    &::placeholder{
+        padding-left: 10px;
+        opacity: 0.5;
+    }
+}
+.container{
+    width: 100%;
+
+}
+.container>h3 {
+    text-align: center;
+    font-size: 25px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.minicontainer{
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+    justify-content: center;
+
+}
+.checkboxContainer{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.left{
+    width: 500px;
+    padding: 0px 20px;
+}
+.right{
+    width: 500px;
+    padding: 0px 20px;
+}
+.checkboxIcon{
+    height: 20px;
+    aspect-ratio: 1/1;
+    margin-right: 10px;
+
+}
+.checkbox{
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.checkboxType{
+    font-weight: 100;
+}
+
+.filecontainer{
+    border: 0.2px solid gray;
+    padding: 15px 0px;
+    flex: 8;
+    padding-left: 15px;
+    border-radius: 5px;
+}
+
+.uploadContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.uploadBtn{
+    flex: 3;
+    margin-left: 20px;
+    border: 1px solid green;
+    padding: 15px 0px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 500ms;
+    color: green;
+    &:hover{
+        background-color: rgb(12, 94, 12);
+        color: white;
+    }
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+}
+.numberInput{
+    height: 40px;
+    width: 55px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+.numberInputContainer span{
+    margin-left: 15px;
+}
+
+.numberInputContainer{
+    margin-right: 40px;
+}
+
+
+.offerInput{
+    height: 40px;
+    width: 60px;
+    border-radius: 5px;
+    border: 1px solid grey;
+}
+.offerPrice{
+    margin-top: 15px;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.priceContainer{
+    margin-left: 15px;
+}
+
+.priceContainer p{
+    font-size: 15px;
+}
+
+.priceContainer span{
+    font-size: 10px;
+}
+
+.roomImg{
+    height: 50px;
+    aspect-ratio: 2/1;
+}
+.roomImgContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid gray;
+    padding: 10px 10px;
+    margin: 10px 0px;
+}
+
+.deleteBtn  {
+    background-color: rgb(211, 29, 29);
+    color: white;
+    border: none;
+    padding: 5px 5px;
+    cursor: pointer;
+}

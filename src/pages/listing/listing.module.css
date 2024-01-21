@@ -1,0 +1,46 @@
+.rent{
+    background-color: brown;
+    color: white;
+    border: none;
+    padding: 8px 40px;
+    border-radius: 5px;
+    margin-right: 25px;
+}
+
+.discount{
+    background-color: rgb(13, 109, 13);
+    color: white;
+    border: none;
+    padding: 8px 40px;
+    border-radius: 5px;
+}
+
+div h3 {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 23px;
+}
+.addressContainer{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.addressContainer span {
+    padding-left: 5px;
+}
+.btnContainer{
+    margin-bottom: 20px;
+}
+
+.description span { 
+    font-weight: 400;
+}
+.description {
+    margin-bottom: 15px;
+}
+
+.amenities{
+    margin-bottom: 20px;
+}

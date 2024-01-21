@@ -58,3 +58,18 @@
         cursor: not-allowed;
     }
 }
+
+.upload {
+    color: green;
+    height: 40px;
+    border: 1px solid green;
+    background-color:transparent;
+    &:hover{
+        background-color: rgb(4, 92, 4);
+        color: white;
+    }
+    &:disabled{
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+}

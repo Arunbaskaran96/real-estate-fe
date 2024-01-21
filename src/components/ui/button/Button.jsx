@@ -12,7 +12,8 @@ export default function Button({ value, variant, disabled, onClick }) {
           variant === "primary" && classes.primary,
           variant === "secondary" && classes.secondary,
           variant === "update" && classes.update,
-          variant === "listing" && classes.listing
+          variant === "listing" && classes.listing,
+          variant === "upload" && classes.upload
         )}
         onClick={onClick}
       >
