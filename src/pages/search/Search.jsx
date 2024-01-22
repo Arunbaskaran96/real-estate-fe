@@ -25,7 +25,7 @@ export default function Search() {
     if (
       e.target.id === "all" ||
       e.target.id === "rent" ||
-      e.target.id === "sale"
+      e.target.id === "sell"
     ) {
       setSidebardata({ ...sidebardata, type: e.target.id });
     }
@@ -91,7 +91,7 @@ export default function Search() {
       } else {
         setShowMore(false);
       }
-      setListings([...listing, ...data]);
+      setListings(data);
     };
 
     fetchListings();
@@ -157,9 +157,9 @@ export default function Search() {
           </div>
           <div className={classes.both}>
             <input
-              id="sale"
+              id="sell"
               onChange={handleChange}
-              checked={sidebardata.type === "sale"}
+              checked={sidebardata.type === "sell"}
               className={classes.checkbox}
               type="checkbox"
             />
@@ -220,55 +220,18 @@ export default function Search() {
         </div>
         <Button value="Search" variant="primary" />
       </form>
-      {/* <div className={classes.right}>
-        <h3>Listing Result :{listing.length}</h3>
-        <div className={classes.listingContainer}>
+      <div className={classes.right}>
+        <h3 style={{ textAlign: "center" }}>
+          Listing Result : {listing.length}
+        </h3>
+        <div className={classes.listingcontainer}>
           {listing &&
             listing.map((item) => {
               return (
                 <Link
                   to={`/layout/listing/${item._id}`}
-                  className={classes.listing}
+                  className={classes.listcontainer}
                 >
-                  <img
-                    className={classes.image}
-                    src={item.imageUrls[0]}
-                    alt="roomImg"
-                  />
-                  <br />
-                  <div className={classes.bottomContainer}>
-                    <p className={classes.name}>{item.name}</p>
-                    <p className={classes.location}>
-                      <CiLocationOn /> <span>{item.address}</span>
-                    </p>
-                    <div className={classes.desContainer}>
-                      <p className={classes.description}>{item.description}</p>
-                    </div>
-                    <p className={classes.price}>${item.regularPrice}</p>
-                    <div className={classes.bottom}>
-                      <p>{item.bedrooms} Beds</p>
-                      <p style={{ marginLeft: "15px" }}>
-                        {item.bathrooms} Baths
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-        </div>
-        {showMore && (
-          <p onClick={showmoreHandler} className={classes.showmore}>
-            Show more
-          </p>
-        )}
-      </div> */}
-      <div className={classes.right}>
-        <h3>Listing Result : {listing.length}</h3>
-        <div className={classes.listingcontainer}>
-          {listing &&
-            listing.map((item) => {
-              return (
-                <div className={classes.listcontainer}>
                   <div>
                     <img
                       className={classes.roomImage}
@@ -289,7 +252,7 @@ export default function Search() {
                       <p>3 Baths</p>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           {showMore && (

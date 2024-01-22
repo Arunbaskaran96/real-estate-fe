@@ -49,8 +49,19 @@ export default function Listing() {
       {loading && <div>Loading...</div>}
       {!loading && (
         <>
-          <div>
-            <Carousel emulateTouch={true} dynamicHeight>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "15px",
+            }}
+          >
+            <Carousel
+              className={classes.carousel}
+              autoPlay
+              interval={1000}
+              infiniteLoop={true}
+            >
               {listing.imageUrls?.map((item) => {
                 return (
                   <div key={item._id}>
