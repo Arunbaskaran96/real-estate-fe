@@ -1,0 +1,95 @@
+.top h2{
+    font-size: 50px;
+    color: rgb(70, 69, 69);
+}
+.top{
+    margin-top: 90px;
+    margin-left: 30px;
+}
+.para{
+    margin-top: 20px;
+    color: grey;
+}
+.start{
+    text-decoration: none;
+    color: blue;
+    cursor: pointer;
+    &:hover{
+        text-decoration: underline;
+    }
+}
+
+.offerType{
+    font-size: 30px;
+    margin-top: 50px;
+    color: rgb(68, 67, 67);
+}
+.showmore{
+    font-size: 15px;
+    color: rgb(56, 56, 218);
+    cursor: pointer;
+    text-decoration: none;
+    &:hover{
+        text-decoration: underline;
+    }
+}
+
+.img{
+    height: 200px;
+    width: 100%;
+}
+.companyName{
+    margin-top: 20px;
+    color: turquoise;
+}
+
+.offer{
+    background-color: white;
+    font-size: 22px;
+    margin: 5px 5px;
+    border-radius: 5px;
+}
+
+.address{
+    font-size: 16px;
+    margin-top: 10px;
+}
+.des{
+    font-size: 13px;
+    height: 30px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+.bottom{
+    display: flex;
+    font-size: 15px;
+    margin-top: 5px;
+}
+.offerContainer{
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 20px;
+    padding-bottom: 30px;
+}
+.offer{
+    width: 300px;
+    margin: auto;
+    text-decoration: none;
+    color: black;
+}
+.price{
+    margin-top: 20px;
+    font-weight: 500;
+}
+
+@media only screen and (max-width: 800px) {
+    .top h2{
+        font-size: 30px;
+    }
+    .para{
+        margin-top: 15px;
+    }
+    .offer{
+        margin-bottom: 50px;
+    }
+  }

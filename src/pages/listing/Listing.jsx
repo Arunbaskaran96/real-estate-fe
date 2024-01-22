@@ -50,12 +50,6 @@ export default function Listing() {
       {!loading && (
         <>
           <div>
-            {/* {listing &&
-              listing.imageUrls?.map((item) => {
-                return (
-
-                );
-              })} */}
             <Carousel emulateTouch={true} dynamicHeight>
               {listing.imageUrls?.map((item) => {
                 return (
@@ -76,8 +70,14 @@ export default function Listing() {
                 <span>{listing.address}</span>
               </div>
               <div className={classes.btnContainer}>
-                <button className={classes.rent}>For Rent</button>
-                <button className={classes.discount}>$10 discount</button>
+                <button className={classes.rent}>
+                  {listing.type === "rent" ? "For Rent" : "For Sale"}
+                </button>
+                {listing.discountPrice > 0 && (
+                  <button className={classes.discount}>
+                    ${listing.discountPrice} discount
+                  </button>
+                )}
               </div>
               <div className={classes.description}>
                 <span>Description -</span>

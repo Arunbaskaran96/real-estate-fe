@@ -1,0 +1,15 @@
+.about{
+    margin-top: 60px;
+    font-size: 35px;
+    color: rgb(68, 67, 67);
+}
+
+.container{
+    max-width: 80%;
+    margin: auto;
+}
+
+.container p {
+    font-size: 17px;
+    margin-top: 20px;
+}

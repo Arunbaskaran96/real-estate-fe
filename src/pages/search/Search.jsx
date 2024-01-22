@@ -1,42 +1,211 @@
+import { useEffect, useState } from "react";
 import Button from "../../components/ui/button/Button";
 import classes from "./search.module.css";
 import { CiLocationOn } from "react-icons/ci";
+import { Link, useNavigate } from "react-router-dom";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 export default function Search() {
+  const { getItem } = useLocalStorage("token");
+  const [listing, setListings] = useState([]);
+  const [showMore, setShowMore] = useState(false);
+  const token = getItem();
+  const navigate = useNavigate();
+  const [sidebardata, setSidebardata] = useState({
+    searchTerm: "",
+    type: "all",
+    parking: false,
+    furnished: false,
+    offer: false,
+    sort: "created_at",
+    order: "desc",
+  });
+
+  const handleChange = (e) => {
+    if (
+      e.target.id === "all" ||
+      e.target.id === "rent" ||
+      e.target.id === "sale"
+    ) {
+      setSidebardata({ ...sidebardata, type: e.target.id });
+    }
+
+    if (e.target.id === "searchTerm") {
+      setSidebardata({ ...sidebardata, searchTerm: e.target.value });
+    }
+
+    if (
+      e.target.id === "parking" ||
+      e.target.id === "furnished" ||
+      e.target.id === "offer"
+    ) {
+      setSidebardata({
+        ...sidebardata,
+        [e.target.id]:
+          e.target.checked || e.target.checked === "true" ? true : false,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    const typeFromUrl = urlParams.get("type");
+    const parkingFromUrl = urlParams.get("parking");
+    const furnishedFromUrl = urlParams.get("furnished");
+    const offerFromUrl = urlParams.get("offer");
+    const sortFromUrl = urlParams.get("sort");
+    const orderFromUrl = urlParams.get("order");
+
+    if (
+      searchTermFromUrl ||
+      typeFromUrl ||
+      parkingFromUrl ||
+      furnishedFromUrl ||
+      offerFromUrl ||
+      sortFromUrl ||
+      orderFromUrl
+    ) {
+      setSidebardata({
+        searchTerm: searchTermFromUrl || "",
+        type: typeFromUrl || "all",
+        parking: parkingFromUrl === "true" ? true : false,
+        furnished: furnishedFromUrl === "true" ? true : false,
+        offer: offerFromUrl === "true" ? true : false,
+        sort: sortFromUrl || "created_at",
+        order: orderFromUrl || "desc",
+      });
+    }
+
+    const fetchListings = async () => {
+      const searchQuery = urlParams.toString();
+      const res = await fetch(`/api/getlistings?${searchQuery}`, {
+        method: "GET",
+        headers: {
+          Authorization: token,
+        },
+      });
+      const data = await res.json();
+      if (data.length > 2) {
+        setShowMore(true);
+      } else {
+        setShowMore(false);
+      }
+      setListings([...listing, ...data]);
+    };
+
+    fetchListings();
+  }, [location.search]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams();
+    urlParams.set("searchTerm", sidebardata.searchTerm);
+    urlParams.set("type", sidebardata.type);
+    urlParams.set("parking", sidebardata.parking);
+    urlParams.set("furnished", sidebardata.furnished);
+    urlParams.set("offer", sidebardata.offer);
+    urlParams.set("sort", sidebardata.sort);
+    urlParams.set("order", sidebardata.order);
+    const searchQuery = urlParams.toString();
+    navigate(`?${searchQuery}`);
+  };
+
+  const showmoreHandler = async () => {
+    const numberOfListings = listing.length;
+    const startIndex = numberOfListings;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/getlistings?${searchQuery}`, {
+      method: "GET",
+      headers: {
+        Authorization: token,
+      },
+    });
+    const data = await res.json();
+    if (data.length < 3) {
+      setShowMore(false);
+    }
+    setListings([...listing, ...data]);
+  };
+
   return (
     <div className={classes.container}>
-      <div className={classes.left}>
+      <form className={classes.left} onSubmit={handleSubmit}>
         <div className={classes.searchContainer}>
           <p>Search Term : </p>
-          <input className={classes.search} />
+          <input
+            onChange={handleChange}
+            value={sidebardata.searchTerm}
+            className={classes.search}
+            type="text"
+            id="searchTerm"
+          />
         </div>
         <div className={classes.typeContainer}>
           <p>Type :</p>
           <div className={classes.both}>
-            <input className={classes.checkbox} type="checkbox" />
+            <input
+              id="all"
+              onChange={handleChange}
+              checked={sidebardata.type === "all"}
+              className={classes.checkbox}
+              type="checkbox"
+            />
             <p style={{ marginLeft: "5px" }}>Sell & Rent</p>
           </div>
           <div className={classes.both}>
-            <input className={classes.checkbox} type="checkbox" />
+            <input
+              id="sale"
+              onChange={handleChange}
+              checked={sidebardata.type === "sale"}
+              className={classes.checkbox}
+              type="checkbox"
+            />
             <p style={{ marginLeft: "5px" }}>Sale</p>
           </div>
           <div className={classes.both}>
-            <input className={classes.checkbox} type="checkbox" />
+            <input
+              id="rent"
+              onChange={handleChange}
+              checked={sidebardata.type === "rent"}
+              className={classes.checkbox}
+              type="checkbox"
+            />
             <p style={{ marginLeft: "5px" }}>Rent</p>
           </div>
           <div className={classes.both}>
-            <input className={classes.checkbox} type="checkbox" />
+            <input
+              id="offer"
+              onChange={handleChange}
+              checked={sidebardata.offer === true}
+              className={classes.checkbox}
+              type="checkbox"
+            />
             <p style={{ marginLeft: "5px" }}>Offer</p>
           </div>
         </div>
         <div style={{ display: "flex", marginBottom: "20px" }}>
           <div style={{ fontSize: "18px" }}>Amenities : </div>
           <div className={classes.amenitiesContainer}>
-            <input className={classes.amenitiesInput} type="checkbox" />
+            <input
+              id="parking"
+              onChange={handleChange}
+              checked={sidebardata.parking === true}
+              className={classes.amenitiesInput}
+              type="checkbox"
+            />
             <p style={{ marginLeft: "5px" }}>Parking</p>
           </div>
           <div className={classes.amenitiesContainer}>
-            <input className={classes.amenitiesInput} type="checkbox" />
+            <input
+              id="furnished"
+              onChange={handleChange}
+              checked={sidebardata.furnished === true}
+              className={classes.amenitiesInput}
+              type="checkbox"
+            />
             <p style={{ marginLeft: "5px" }}>Furnished</p>
           </div>
         </div>
@@ -50,76 +219,84 @@ export default function Search() {
           </select>
         </div>
         <Button value="Search" variant="primary" />
-      </div>
-      <div className={classes.right}>
-        <h3>Listing Result :</h3>
+      </form>
+      {/* <div className={classes.right}>
+        <h3>Listing Result :{listing.length}</h3>
         <div className={classes.listingContainer}>
-          <div className={classes.listing}>
-            <img
-              className={classes.image}
-              src="https://t3.ftcdn.net/jpg/02/71/08/28/360_F_271082810_CtbTjpnOU3vx43ngAKqpCPUBx25udBrg.jpg"
-              alt="roomImg"
-            />
-            <br />
-            <div className={classes.bottomContainer}>
-              <p className={classes.name}>Modern House</p>
-              <p className={classes.location}>
-                <CiLocationOn /> <span>Chennai</span>
-              </p>
-              <div className={classes.desContainer}>
-                <p className={classes.description}>
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took a galley of type and scrambled it to make a type
-                  specimen book. It has survived not only five centuries, but
-                  also the leap into electronic typesetting, remaining
-                  essentially unchanged. It was popularised in the 1960s with
-                  the release of Letraset sheets containing Lorem Ipsum
-                  passages, and more recently with desktop publishing software
-                  like Aldus PageMaker including versions of Lorem Ipsum.
-                </p>
-              </div>
-              <p className={classes.price}>$100000</p>
-              <div className={classes.bottom}>
-                <p>3 Beds</p>
-                <p style={{ marginLeft: "15px" }}>3 Baths</p>
-              </div>
-            </div>
-          </div>
-          <div className={classes.listing}>
-            <img
-              className={classes.image}
-              src="https://t3.ftcdn.net/jpg/02/71/08/28/360_F_271082810_CtbTjpnOU3vx43ngAKqpCPUBx25udBrg.jpg"
-              alt="roomImg"
-            />
-            <br />
-            <div className={classes.bottomContainer}>
-              <p className={classes.name}>Modern House</p>
-              <p className={classes.location}>
-                <CiLocationOn /> <span>Chennai</span>
-              </p>
-              <div className={classes.desContainer}>
-                <p className={classes.description}>
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took a galley of type and scrambled it to make a type
-                  specimen book. It has survived not only five centuries, but
-                  also the leap into electronic typesetting, remaining
-                  essentially unchanged. It was popularised in the 1960s with
-                  the release of Letraset sheets containing Lorem Ipsum
-                  passages, and more recently with desktop publishing software
-                  like Aldus PageMaker including versions of Lorem Ipsum.
-                </p>
-              </div>
-              <p className={classes.price}>$100000</p>
-              <div className={classes.bottom}>
-                <p>3 Beds</p>
-                <p style={{ marginLeft: "15px" }}>3 Baths</p>
-              </div>
-            </div>
-          </div>
+          {listing &&
+            listing.map((item) => {
+              return (
+                <Link
+                  to={`/layout/listing/${item._id}`}
+                  className={classes.listing}
+                >
+                  <img
+                    className={classes.image}
+                    src={item.imageUrls[0]}
+                    alt="roomImg"
+                  />
+                  <br />
+                  <div className={classes.bottomContainer}>
+                    <p className={classes.name}>{item.name}</p>
+                    <p className={classes.location}>
+                      <CiLocationOn /> <span>{item.address}</span>
+                    </p>
+                    <div className={classes.desContainer}>
+                      <p className={classes.description}>{item.description}</p>
+                    </div>
+                    <p className={classes.price}>${item.regularPrice}</p>
+                    <div className={classes.bottom}>
+                      <p>{item.bedrooms} Beds</p>
+                      <p style={{ marginLeft: "15px" }}>
+                        {item.bathrooms} Baths
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+        </div>
+        {showMore && (
+          <p onClick={showmoreHandler} className={classes.showmore}>
+            Show more
+          </p>
+        )}
+      </div> */}
+      <div className={classes.right}>
+        <h3>Listing Result : {listing.length}</h3>
+        <div className={classes.listingcontainer}>
+          {listing &&
+            listing.map((item) => {
+              return (
+                <div className={classes.listcontainer}>
+                  <div>
+                    <img
+                      className={classes.roomImage}
+                      src={item.imageUrls[0]}
+                      alt="room"
+                    />
+                  </div>
+                  <div style={{ paddingLeft: "20px" }}>
+                    <p className={classes.name}>{item.name}</p>
+                    <p className={classes.address}>
+                      <CiLocationOn color="green" /> <span>{item.address}</span>
+                    </p>
+                    <p className={classes.descriptionText}>
+                      {item.description}
+                    </p>
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <p style={{ marginRight: "10px" }}>3 Beds</p>
+                      <p>3 Baths</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          {showMore && (
+            <p onClick={showmoreHandler} className={classes.showmore}>
+              Show more
+            </p>
+          )}
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ import Createlisting from "./pages/create-listing/Createlisting";
 import Listing from "./pages/listing/Listing";
 import Updatelisting from "./pages/updatelisting/UpdateListing";
 import Search from "./pages/search/Search";
+import About from "./pages/about/About";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="listing/:id" element={<Listing />} />
             <Route path="update-listing/:id" element={<Updatelisting />} />
             <Route path="search" element={<Search />} />
+            <Route path="about" element={<About />} />
           </Route>
         </Route>
       </Routes>
